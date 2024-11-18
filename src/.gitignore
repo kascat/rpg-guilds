@@ -1,0 +1,6 @@
+/*
+!.gitignore
+
+# Manter desabilitado quando há repositórios individuais para backend e frontend
+!/backend
+!/frontend

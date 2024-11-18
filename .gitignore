@@ -1,0 +1,6 @@
+/docker-compose.yaml
+.sudo-pass
+.env
+
+/.idea
+/.vscode
