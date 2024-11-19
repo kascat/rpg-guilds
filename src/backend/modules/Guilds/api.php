@@ -7,10 +7,10 @@
  */
 
 use Illuminate\Support\Facades\Route;
-use Tools\ToolController;
+use Guilds\GuildController;
 
 Route::group([
-    'middleware' => ['api']
+    'middleware' => ['api', 'auth:user', 'user_checker']
 ], function () {
-    Route::get('qrcode', [ToolController::class, 'qrcode'])->name('qrcode');
+    // Route::apiResource('guilds', GuildController::class);
 });

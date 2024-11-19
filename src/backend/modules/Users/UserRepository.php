@@ -11,12 +11,6 @@ class UserRepository
         $loggedUserFilters = User::loggedUserFilters();
 
         return User::query()
-             ->when($loggedUserFilters[User::STORE_ID] ?? null, function (Builder $query, $value) {
-                 $query->where(User::STORE_ID, '=', $value);
-             })
-            ->when($loggedUserFilters[User::SALES_POINT_ID] ?? null, function (Builder $query, $value) {
-                 $query->where(User::SALES_POINT_ID, '=', $value);
-             })
             ->findOrFail($id);
     }
 
@@ -38,10 +32,6 @@ class UserRepository
                 return $query->where(User::ROLE, $value);
             })->when($filters[User::PERMISSION_ID] ?? null, function ($query, $permissionId) {
                 return $query->where(User::PERMISSION_ID, $permissionId);
-            })->when($filters[User::STORE_ID] ?? null, function (Builder $query, $value) {
-                return $query->where(User::STORE_ID, $value);
-            })->when($filters[User::SALES_POINT_ID] ?? null, function (Builder $query, $value) {
-                return $query->where(User::SALES_POINT_ID, $value);
             });
     }
 }

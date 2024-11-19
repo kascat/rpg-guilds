@@ -2,16 +2,11 @@
 
 namespace Users;
 
-use App\Rules\CnpjRule;
 use App\Utils\Formatter;
 use Illuminate\Validation\Rule;
 use Kascat\EasyModule\Core\Request;
 use Illuminate\Validation\Rules\Password;
 use Permissions\Permission;
-use SalesPoints\SalesPoint;
-use StorePlans\Enums\PlanOptionsEnum;
-use StorePlans\StorePlan;
-use Stores\Store;
 use Users\Enums\UserRoleEnum;
 
 class UserRequest extends Request
@@ -70,8 +65,6 @@ class UserRequest extends Request
             User::LOGIN_TIME => 'nullable|integer',
             User::EXPIRES_IN => 'nullable|date_format:d/m/Y H:i',
             User::PERMISSION_ID => ['required', 'int', Rule::exists(Permission::TABLE, Permission::ID)],
-            User::STORE_ID => ['nullable', 'int', Rule::exists(Store::TABLE, Store::ID)],
-            User::SALES_POINT_ID => ['nullable', 'int', Rule::exists(SalesPoint::TABLE, SalesPoint::ID)],
         ];
     }
 
@@ -95,8 +88,6 @@ class UserRequest extends Request
             User::LOGIN_TIME => 'nullable|integer',
             User::EXPIRES_IN => 'nullable|date_format:d/m/Y H:i',
             User::PERMISSION_ID => ['int', Rule::exists(Permission::TABLE, Permission::ID)],
-            User::STORE_ID => ['nullable', 'int', Rule::exists(Store::TABLE, Store::ID)],
-            User::SALES_POINT_ID => ['nullable', 'int', Rule::exists(SalesPoint::TABLE, SalesPoint::ID)],
         ];
     }
 

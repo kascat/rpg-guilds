@@ -11,8 +11,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use SalesPoints\SalesPoint;
-use Stores\Store;
 use Users\Enums\UserRoleEnum;
 
 /**
@@ -44,8 +42,6 @@ class User extends Authenticatable
 
     const ID = 'id';
     const PERMISSION_ID = 'permission_id';
-    const STORE_ID = 'store_id';
-    const SALES_POINT_ID = 'sales_point_id';
     const NAME = 'name';
     const EMAIL = 'email';
     const ROLE = 'role';
@@ -59,8 +55,6 @@ class User extends Authenticatable
     const UPDATED_AT = 'updated_at';
 
     const RELATION_PERMISSION = 'permission';
-    const RELATION_STORE = 'store';
-    const RELATION_SALES_POINT = 'salesPoint';
 
     const TABLE = 'users';
 
@@ -90,7 +84,6 @@ class User extends Authenticatable
         return $this->belongsTo(Permission::class, self::PERMISSION_ID, Permission::ID);
     }
 
-
     public static function loggedUserFilters(): array
     {
         /** @var self|null $loggedUser */
@@ -101,7 +94,7 @@ class User extends Authenticatable
         }
 
         return array_filter([
-            // self::STORE_ID => $loggedUser->relation_id,
+            'user_id' => $loggedUser->id,
         ]);
     }
 }

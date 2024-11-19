@@ -27,6 +27,8 @@ export default {
   permissions: {
     users: 'Gestão de usuários',
     permissions: 'Gestão de permissões',
+    manage_players: 'Gestão de jogadores',
+    manage_sessions: 'Gestão de sessões',
   },
   user: {
     role: {
