@@ -16,6 +16,7 @@ class PlayerRequest extends Request
     {
         return [
             Player::NAME => ['string', 'nullable'],
+            Player::ACTIVE => ['boolean', 'nullable'],
         ];
     }
 

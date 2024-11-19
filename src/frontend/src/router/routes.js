@@ -110,6 +110,30 @@ const users = [
   },
 ];
 
+const players = [
+  {
+    path: '/players',
+    name: 'players',
+    component: () => import('pages/Players/PlayersListPage'),
+    beforeEnter: checkLoggedUserAbilities,
+    meta: { allAbilities: [ ABILITIES.MANAGE_PLAYERS ] },
+  },
+  {
+    path: '/players/create',
+    name: 'players_create',
+    component: () => import('pages/Players/PlayerFormPage'),
+    beforeEnter: checkLoggedUserAbilities,
+    meta: { allAbilities: [ ABILITIES.MANAGE_PLAYERS ] },
+  },
+  {
+    path: '/players/update/:id',
+    name: 'players_update',
+    component: () => import('pages/Players/PlayerFormPage'),
+    beforeEnter: checkLoggedUserAbilities,
+    meta: { allAbilities: [ ABILITIES.MANAGE_PLAYERS ] },
+  },
+];
+
 const routes = [
   {
     path: '/',
@@ -128,6 +152,7 @@ const routes = [
       },
       ...permissions,
       ...users,
+      ...players,
     ],
   },
   {

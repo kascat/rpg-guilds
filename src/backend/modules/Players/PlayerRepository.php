@@ -32,6 +32,9 @@ class PlayerRepository
             })
             ->when($filters[Player::NAME] ?? null, function (Builder $query, $value) {
                 $query->where(Player::NAME, 'like', "%$value%");
+            })
+            ->when(is_bool($filters[Player::ACTIVE] ?? null), function (Builder $query) use ($filters) {
+                $query->where(Player::ACTIVE, $filters[Player::ACTIVE]);
             });
     }
 }

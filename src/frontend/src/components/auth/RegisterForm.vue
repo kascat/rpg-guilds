@@ -91,7 +91,6 @@ import { formatResponseError } from 'src/services/utils/error-formatter';
 import { t } from 'src/services/utils/i18n';
 import { register } from 'src/services/auth/auth-api';
 import { loadLoggedUser } from 'boot/user';
-import { PLAN_OPTIONS } from 'src/constants/plan_options';
 
 const router = useRouter();
 

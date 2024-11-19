@@ -24,6 +24,14 @@ const allMenuItems = [
     anyAbilities: [ null ],
   },
   {
+    label: 'menu.players',
+    icon: 'o_groups',
+    to: {
+      name: 'players',
+    },
+    allAbilities: [ ABILITIES.MANAGE_PLAYERS ],
+  },
+  {
     label: 'menu.system_access',
     icon: 'o_admin_panel_settings',
     children: [

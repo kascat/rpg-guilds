@@ -45,6 +45,7 @@ class Player extends Model
     ];
 
     protected $casts = [
+        self::ACTIVE => 'boolean',
         self::PLAYER_CLASS => PlayerClassesEnum::class,
     ];
 

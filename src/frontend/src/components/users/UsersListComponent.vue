@@ -85,7 +85,7 @@
         <q-item class="q-pa-none">
           <q-item-section>
             <q-item-label>{{ t(`user.role.${props.row.role}`) }}</q-item-label>
-            <q-item-label caption>{{ props.row.store?.business_name || props.row.store?.corporate_name }}</q-item-label>
+            <q-item-label caption>{{ formatDatetimeBR(props.row.created_at) }}</q-item-label>
           </q-item-section>
         </q-item>
       </q-td>
@@ -152,6 +152,7 @@ import { getUsers, destroyUser, updateUser } from 'src/services/user/user-api';
 import { t } from 'src/services/utils/i18n';
 import { Notify, Dialog } from 'quasar';
 import { ROLES } from 'src/constants/user_roles';
+import { formatDatetimeBR } from '../../services/utils/date';
 
 const usersData = ref([]);
 const loading = ref(false);
@@ -167,7 +168,6 @@ const mainPagination = ref({
   page: 1,
   rowsPerPage: 10,
   rowsNumber: 0,
-  with: ['store']
 });
 
 const columns = [
