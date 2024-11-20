@@ -134,6 +134,30 @@ const players = [
   },
 ];
 
+const sessions = [
+  {
+    path: '/sessions',
+    name: 'sessions',
+    component: () => import('pages/Sessions/SessionsListPage'),
+    beforeEnter: checkLoggedUserAbilities,
+    meta: { allAbilities: [ ABILITIES.MANAGE_SESSIONS ] },
+  },
+  {
+    path: '/sessions/create',
+    name: 'sessions_create',
+    component: () => import('pages/Sessions/SessionFormPage'),
+    beforeEnter: checkLoggedUserAbilities,
+    meta: { allAbilities: [ ABILITIES.MANAGE_SESSIONS ] },
+  },
+  {
+    path: '/sessions/update/:id',
+    name: 'sessions_update',
+    component: () => import('pages/Sessions/SessionFormPage'),
+    beforeEnter: checkLoggedUserAbilities,
+    meta: { allAbilities: [ ABILITIES.MANAGE_SESSIONS ] },
+  },
+];
+
 const routes = [
   {
     path: '/',
@@ -153,6 +177,7 @@ const routes = [
       ...permissions,
       ...users,
       ...players,
+      ...sessions,
     ],
   },
   {

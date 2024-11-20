@@ -47,7 +47,7 @@
             outline
             color="primary"
             icon="edit"
-            :to="{ name: 'players_update', params: { 'id': props.row.id } }"
+            :to="{ name: 'sessions_update', params: { 'id': props.row.id } }"
           >
             <q-tooltip>
               {{ t('update') }}
@@ -73,9 +73,10 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getPlayers, destroyPlayer } from 'src/services/players/players-api';
+import { getSessions, destroySession } from 'src/services/sessions/sessions-api';
 import { t } from 'src/services/utils/i18n';
 import { Notify, Dialog } from 'quasar';
+import { formatDatetimeBR } from 'src/services/utils/date';
 
 const listData = ref([]);
 const loading = ref(false);
@@ -85,6 +86,7 @@ const mainPagination = ref({
   page: 1,
   rowsPerPage: 10,
   rowsNumber: 0,
+  with: ['guilds'],
 });
 
 const columns = [
@@ -96,24 +98,18 @@ const columns = [
     format: val => val || t('ni'),
   },
   {
-    name: 'class',
-    label: t('class'),
+    name: 'created_at',
+    label: t('date'),
     align: 'left',
-    field: 'class',
-    format: val => val ? t(`player_classes.${val}`) : t('ni'),
+    field: 'created_at',
+    format: val => val ? formatDatetimeBR(val) : t('ni'),
   },
   {
-    name: 'xp',
-    label: t('xp'),
+    name: 'guilds',
+    label: t('guilds'),
     align: 'left',
-    field: 'xp',
-  },
-  {
-    name: 'active',
-    label: t('status'),
-    align: 'left',
-    field: 'active',
-    format: val => t(val ? 'active' : 'inactive'),
+    field: 'guilds',
+    format: val => val?.length || '0'
   },
   {
     name: 'actions',
@@ -132,7 +128,7 @@ async function fetchList(props) {
   loading.value = true;
   try {
     mainPagination.value = props?.pagination || mainPagination.value;
-    listData.value = await getPlayers(mainPagination.value);
+    listData.value = await getSessions(mainPagination.value);
   } catch (e) {
     Notify.create({
       message: t('failed_to_load_data'),
@@ -150,7 +146,7 @@ function deleteItem(id) {
   }).onOk(async () => {
     removingId.value = id;
     try {
-      await destroyPlayer(id);
+      await destroySession(id);
       fetchList();
 
       Notify.create({

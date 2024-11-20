@@ -32,6 +32,14 @@ const allMenuItems = [
     allAbilities: [ ABILITIES.MANAGE_PLAYERS ],
   },
   {
+    label: 'menu.sessions',
+    icon: 'o_sports_esports',
+    to: {
+      name: 'sessions',
+    },
+    allAbilities: [ ABILITIES.MANAGE_SESSIONS ],
+  },
+  {
     label: 'menu.system_access',
     icon: 'o_admin_panel_settings',
     children: [
