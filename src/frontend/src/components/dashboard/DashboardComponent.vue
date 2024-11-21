@@ -1,14 +1,17 @@
 <template>
   <div class="justify-center row q-pa-xl">
-    <div class="col-12 text-center q-mt-xl text-h5">
-      {{ t('app_name') }}
-    </div>
     <img
-      class="q-ma-xl"
+      class="q-mt-md"
       src="~assets/logo.png"
       alt="Logo image"
       style="max-height:90px; max-width: 80vw"
-    >
+    />
+    <div class="col-12 text-center q-mt-md text-h5">
+      {{ t('app_name') }}
+    </div>
+    <div class="col-12 text-center q-mt-md text-bold">
+      {{ t('dashboard_message') }}
+    </div>
   </div>
   <!-- desativado até ajustar dashboard -->
   <div v-if="false">

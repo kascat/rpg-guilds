@@ -84,8 +84,28 @@ class SessionService extends Service
 
     public function destroy(Session $session): array
     {
-        $session->delete();
+        DB::beginTransaction();
 
-        return self::buildReturn();
+        try {
+            $session->guilds->each(function (Guild $guild) {
+                $guild->players()->detach();
+                $guild->delete();
+            });
+
+            $session->delete();
+
+            DB::commit();
+
+            return self::buildReturn();
+        } catch (Throwable $exception) {
+            DB::rollBack();
+
+            Log::error('SessionService: Error on delete', [
+                'errorMessage' => $exception->getMessage(),
+            ]);
+
+            return self::buildReturn(['message' => 'Falha ao remover sessão'], 422);
+        }
+
     }
 }

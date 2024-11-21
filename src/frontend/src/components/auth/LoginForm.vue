@@ -1,10 +1,13 @@
 <template>
   <q-form @submit="login()">
     <div class="login-container column justify-between">
-      <div class="text-center text-h4">
-        {{ t('welcome') }}
+      <div class="col-12 text-center q-pa-md text-h6">
+        {{ t('login_title') }}
       </div>
-      <div>
+      <div class="col-12 text-center q-pa-md text-bold">
+        {{ t('login_message') }}
+      </div>
+      <div class="q-mt-xl">
         <q-input
           v-model="formData.email"
           :label="t('email')"

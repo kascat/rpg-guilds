@@ -6,7 +6,7 @@
       </h5>
       <q-btn
         icon="add"
-        :label="t('register')"
+        :label="t('create_session')"
         color="primary"
         outline
         :to="{ name: 'sessions_create' }"

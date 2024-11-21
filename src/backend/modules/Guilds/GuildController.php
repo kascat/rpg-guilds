@@ -16,6 +16,13 @@ class GuildController extends Controller
         //
     }
 
+    public function organizeGuilds(GuildRequest $request): mixed
+    {
+        $result = $this->guildService->organizeGuilds($request->validated());
+
+        return $this->response($result['response'], $result['status']);
+    }
+
     public function index(GuildRequest $request): mixed
     {
         $result = $this->guildService->index($request->validated());

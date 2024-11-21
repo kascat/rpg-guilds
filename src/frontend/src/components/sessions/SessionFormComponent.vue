@@ -12,22 +12,12 @@
           dense
           outlined
           hide-bottom-space
-          class="col-xs-8"
+          class="col-xs-12"
+          :readonly="isShowMode"
           :rules="[val => !!val || t('mandatory_completion')]"
         />
-        <q-input
-          v-model="configuration.players_per_guild"
-          :label="t('players_per_guild') + ' *'"
-          dense
-          outlined
-          hide-bottom-space
-          type="number"
-          step="1"
-          min="1"
-          class="col-xs-12 col-md-4"
-          :rules="[val => val > 0 || t('mandatory_completion')]"
-        />
         <q-select
+          v-if="!isShowMode"
           class="col-xs-12"
           :label="t('players') + ' *'"
           map-options
@@ -70,14 +60,14 @@
                 @dragleave="onDragLeave"
                 @dragover="onDragOver"
                 @drop="onDrop"
-                :data-box="true"
+                :data-box="!isShowMode"
                 class="overflow-hidden row q-pa-sm"
               >
                 <div
                   v-for="(player, index) in configuration.selected_players"
                   :key="`available-${index}`"
                   :id="`player-${player.id}`"
-                  draggable="true"
+                  :draggable="!isShowMode"
                   class="col-xs-12 col-sm-4 col-md-3 q-pa-sm"
                   @dragstart="onDragStart"
                   :data-player="player.id"
@@ -99,32 +89,41 @@
 
         <div class="col-xs-12">
           <div class="row justify-between q-mb-md items-center">
-            <div>
-              <div class="q-mb-sm text-h6">
-                {{ t('player_guilds') }}
-              </div>
-              <div class="text-grey-7">{{ t('drag_tip') }}</div>
+            <div class="q-mb-sm text-h6">
+              {{ t('player_guilds') }}
             </div>
-<!--            TODO: Habilitar adição personalisada -->
-<!--            <q-btn-->
-<!--              icon="add"-->
-<!--              :label="t('add_guild')"-->
-<!--              color="primary"-->
-<!--              outline-->
-<!--              @click="configuration.guilds.push([])"-->
-<!--            />-->
-            <q-btn
-              icon="star"
-              :label="t('organize')"
-              color="primary"
-              outline
-              @click="organizeGuilds()"
-            />
+            <div v-if="!isShowMode" class="row">
+              <q-input
+                v-model="configuration.players_per_guild"
+                :label="t('players_per_guild') + ' *'"
+                dense
+                outlined
+                hide-bottom-space
+                type="number"
+                step="1"
+                min="1"
+                class="col-xs-12 col-sm"
+              />
+              <q-btn
+                class="q-ml-md"
+                icon="star"
+                :label="t('organize')"
+                color="secondary"
+                outline
+                :disable="!configuration.players_per_guild"
+                @click="sortGuilds()"
+              />
+            </div>
+          </div>
+
+          <div v-if="session.guilds.length && !isShowMode" class="q-my-md">
+            <q-separator/>
+            <div class="text-grey-7 q-mt-md text-center">{{ t('drag_tip') }}</div>
           </div>
 
           <div class="row">
             <q-banner
-              v-if="!configuration.guilds.length"
+              v-if="!session.guilds.length"
               inline-actions
               rounded
               class="col-xs-12 bg-primary text-white"
@@ -133,17 +132,25 @@
             </q-banner>
             <div class="col-xs-12 row">
               <div
-                v-for="(guild, guildIndex) in configuration.guilds"
+                v-for="(guild, guildIndex) in session.guilds"
                 :key="`guild-${guildIndex}`"
-                class="col-xs-12 col-sm-6 col-md-4 q-pa-xs"
+                class="col-xs-12 col-sm-6 col-md-3 q-pa-xs"
               >
                 <q-card
                   flat
                   bordered
                   class="bg-blue-grey-1"
                 >
-                  <div class="text-bold q-pa-md">
-                    {{ t('player_on_guild') }}
+                  <div class="text-bold text-uppercase q-pa-md">
+                    {{ t('guild') }} {{ guildIndex + 1 }}
+                  </div>
+
+                  <div class="q-px-md q-pb-sm">
+                    {{ t('xp') }}: {{ xpOnGuild(guild.players) }}
+                  </div>
+
+                  <div class="q-px-md q-pb-sm">
+                    {{ t('player_on_guild') }}:
                   </div>
 
                   <q-separator/>
@@ -154,15 +161,15 @@
                       @dragleave="onDragLeave"
                       @dragover="onDragOver"
                       @drop="onDrop"
-                      :data-box="true"
+                      :data-box="!isShowMode"
                       :data-guild="guildIndex"
                       class="overflow-hidden q-pa-s q-pb-xl full-height"
                     >
                       <div
-                        v-for="(guildPlayer, guildPlayerIndex) in guild"
+                        v-for="(guildPlayer, guildPlayerIndex) in (guild.players || [])"
                         :key="`available-${guildPlayerIndex}`"
                         :id="`player-${guildPlayer.id}`"
-                        draggable="true"
+                        :draggable="!isShowMode"
                         class="col-xs-12 col-sm-4 col-md-3 q-pa-sm"
                         @dragstart="onDragStart"
                         :data-player="guildPlayer.id"
@@ -185,14 +192,14 @@
           </div>
         </div>
 
-        <div class="col-xs-12 text-right">
+        <div v-if="!isShowMode" class="col-xs-12 text-right">
           <q-btn
             outline
             :label="t('save')"
             icon="save"
             type="submit"
             color="primary"
-            :disable="saving || !configuration.guilds.length"
+            :disable="saving || !session.guilds.length"
             :loading="saving"
           />
         </div>
@@ -209,6 +216,7 @@ import { t } from 'src/services/utils/i18n';
 import { createSession, getSession, updateSession } from 'src/services/sessions/sessions-api';
 import { formatResponseError } from 'src/services/utils/error-formatter';
 import { getPlayers } from 'src/services/players/players-api';
+import { organizeGuilds } from 'src/services/guilds/guilds-api';
 
 const router = useRouter();
 
@@ -233,31 +241,32 @@ const playerOptions = ref([]);
 const saving = ref(false);
 const itemFormRef = ref(null);
 const organizing = ref(false);
+const isShowMode = ref(false);
 
 onMounted(async () => {
   if (props.formItemId) {
+    isShowMode.value = true;
     await fetchItem(props.formItemId);
   }
 });
 
 async function saveItem() {
+  if (!!props.formItemId) {
+    return;
+  }
+
   saving.value = true;
   try {
     const validated = await itemFormRef.value.validate();
 
     if (validated) {
       const dataToSave = { ...session.value };
-      dataToSave.guilds = configuration.value.guilds.map((g) => {
-        return {
-          players: g.map((p) => p.id),
-        };
+      dataToSave.guilds = session.value.guilds.map((g) => {
+        g.players = g.players.map((p) => p.id);
+        return g;
       });
 
-      if (!props.formItemId) {
-        await createSession(dataToSave);
-      } else {
-        await updateSession(props.formItemId, dataToSave);
-      }
+      await createSession(dataToSave);
 
       Notify.create({
         message: t('saved_successfully'),
@@ -278,7 +287,7 @@ async function saveItem() {
 async function fetchItem(id) {
   Loading.show();
   try {
-    session.value = await getSession(id);
+    session.value = await getSession(id, { with: [ 'guilds.players' ] });
   } catch (e) {
     Notify.create({
       message: t('failed_to_load'),
@@ -288,10 +297,19 @@ async function fetchItem(id) {
   Loading.hide();
 }
 
-async function organizeGuilds() {
+async function sortGuilds() {
   organizing.value = true;
   try {
-    alert('111');
+    const sortedGuilds = await organizeGuilds({
+      players_per_guild: configuration.value.players_per_guild,
+      players: configuration.value.selected_players.map((p) => p.id),
+    });
+
+    session.value.guilds = sortedGuilds;
+
+    // exibir quando estiver faltando classe (fazer funções para somatorios e se tem classe),
+    // então colocar no servidor,
+
   } catch (e) {
     Notify.create({
       message: t('failed_to_organize'),
@@ -321,9 +339,18 @@ async function filterPlayers(val, update, abort) {
 function filterSelectedPlayers() {
   const selectedIds = configuration.value.selected_players.map(p => p.id);
 
-  configuration.value.guilds = configuration.value.guilds.map((guild) => {
-    return guild.filter(p => selectedIds.includes(p.id));
+  session.value.guilds = session.value.guilds.map((guild) => {
+    return {
+      ...guild,
+      players: guild.players.filter(p => selectedIds.includes(p.id)),
+    };
   });
+}
+
+function xpOnGuild(players) {
+  return (players || []).reduce((previousValue, currentPlayer) => {
+    return previousValue + (currentPlayer.xp || 0);
+  }, 0);
 }
 
 // store the id of the draggable element
@@ -371,11 +398,14 @@ function onDrop(e) {
 
   const draggedPlayer = configuration.value.selected_players.find(p => p.id == draggedEl.dataset.player);
 
-  configuration.value.guilds = configuration.value.guilds.map((guild) => {
-    return guild.filter(p => p.id !== draggedPlayer.id);
+  session.value.guilds = session.value.guilds.map((guild) => {
+    return {
+      ...guild,
+      players: guild.players.filter(p => p.id !== draggedPlayer.id),
+    };
   });
 
-  configuration.value.guilds[+e.target.dataset.guild].push(draggedPlayer);
+  session.value.guilds[+e.target.dataset.guild].players.push(draggedPlayer);
 }
 </script>
 

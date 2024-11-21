@@ -2,12 +2,15 @@
   <div class="login-page row items-center justify-center">
     <div class="col-xs-12 col-sm-7 col-md-5 col-lg-4">
       <div class="row items-center justify-center">
-        <div class="image-container">
+        <div class="image-container text-center">
           <img
             src="~assets/logo.png"
             alt="Logo image"
             style="max-height:90px; max-width: 80vw"
-          >
+          />
+          <div class="text-h5">
+            {{ t('app_name') }}
+          </div>
         </div>
       </div>
       <reset-password-form/>
@@ -29,7 +32,7 @@ import ResetPasswordForm from 'components/auth/ResetPasswordForm';
 }
 
 .image-container {
-  background: #160f2c;
+  background: #cbc7fa;
   border-radius: 15px;
   margin-bottom: 15px;
   padding: 10px 10px 5px;

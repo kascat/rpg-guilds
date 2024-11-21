@@ -2,13 +2,23 @@
 
 namespace Guilds;
 
+use Illuminate\Validation\Rule;
 use Kascat\EasyModule\Core\Request;
+use Players\Player;
 
 /**
  * Class GuildRequest
  */
 class GuildRequest extends Request
 {
+    public function validateToOrganizeGuilds(): array
+    {
+        return [
+            'players_per_guild' => ['required', 'int'],
+            'players' => ['required', 'array', Rule::exists(Player::TABLE, Player::ID)],
+        ];
+    }
+
     public function validateToIndex(): array
     {
         return [

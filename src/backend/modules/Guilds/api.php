@@ -13,4 +13,5 @@ Route::group([
     'middleware' => ['api', 'auth:user', 'user_checker']
 ], function () {
     // Route::apiResource('guilds', GuildController::class);
+    Route::get('organize-guilds', [GuildController::class, 'organizeGuilds']);
 });

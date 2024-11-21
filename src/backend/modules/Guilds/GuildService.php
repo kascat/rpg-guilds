@@ -2,13 +2,35 @@
 
 namespace Guilds;
 
+use Guilds\Actions\OrganizeGuildsAction;
+use Illuminate\Support\Facades\Log;
 use Kascat\EasyModule\Core\Service;
+use Throwable;
 
 /**
  * Class GuildService
  */
 class GuildService extends Service
 {
+    public function __construct(private readonly OrganizeGuildsAction $organizeGuildsAction)
+    {
+    }
+
+    public function organizeGuilds(array $data): array
+    {
+        try {
+            $organizedGuilds = $this->organizeGuildsAction->handle($data['players_per_guild'], $data['players']);
+
+            return self::buildReturn($organizedGuilds);
+        } catch (Throwable $exception) {
+            Log::error('GuildService: Error on organize guilds', [
+                'errorMessage' => $exception->getMessage()
+            ]);
+
+            return self::buildReturn([], 422);
+        }
+    }
+
     public function index(array $filters): array
     {
         $guildsQuery = GuildRepository::defautFiltersQuery($filters);

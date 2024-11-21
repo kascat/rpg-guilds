@@ -23,20 +23,6 @@
             debounce="500"
             @update:model-value="fetchList()"
           />
-          <q-checkbox
-            v-model="mainPagination.active"
-            :label="activeCheckboxLabel(mainPagination.active)"
-            class="col-xs-12 col-md-4"
-            debounce="500"
-            toggle-indeterminate
-            :true-value="true"
-            :false-value="null"
-            :indeterminate-value="false"
-            indeterminate-icon="disabled_by_default"
-            checked-icon="check_box"
-            unchecked-icon="list_alt"
-            @update:model-value="fetchList()"
-          />
         </div>
       </div>
     </template>
@@ -46,11 +32,11 @@
           <q-btn
             outline
             color="primary"
-            icon="edit"
+            icon="visibility"
             :to="{ name: 'sessions_update', params: { 'id': props.row.id } }"
           >
             <q-tooltip>
-              {{ t('update') }}
+              {{ t('view') }}
             </q-tooltip>
           </q-btn>
           <q-btn
