@@ -9,3 +9,10 @@ export const PLAYER_CLASSES = {
   ARCHER,
   CLERIC,
 };
+
+export const PLAYER_CLASS_ICONS = {
+  warrior: 'shield',
+  mage: 'local_fire_department',
+  archer: 'my_location',
+  cleric: 'bolt',
+};

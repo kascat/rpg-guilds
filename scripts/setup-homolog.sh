@@ -80,7 +80,7 @@ docker compose up --force-recreate -d
 
 docker exec -it $BACK_CONTAINER_NAME chown -R nginx:nginx /var/www/app/storage
 docker exec -it $BACK_CONTAINER_NAME chown -R nginx:nginx /var/www/app/bootstrap/cache
-docker exec -it $BACK_CONTAINER_NAME composer install
+docker exec -it $BACK_CONTAINER_NAME composer install --no-dev
 docker exec -it $BACK_CONTAINER_NAME php artisan key:generate
 docker restart $BACK_CONTAINER_NAME
 docker exec -it $BACK_CONTAINER_NAME php artisan migrate

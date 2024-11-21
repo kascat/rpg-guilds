@@ -8,7 +8,7 @@
       >
         <q-input
           v-model="session.name"
-          :label="t('name') + ' *'"
+          :label="t('session_name') + ' *'"
           dense
           outlined
           hide-bottom-space
@@ -110,7 +110,8 @@
                 :label="t('organize')"
                 color="secondary"
                 outline
-                :disable="!configuration.players_per_guild"
+                :disable="!configuration.players_per_guild || organizing"
+                :loading="organizing"
                 @click="sortGuilds()"
               />
             </div>
@@ -141,16 +142,39 @@
                   bordered
                   class="bg-blue-grey-1"
                 >
-                  <div class="text-bold text-uppercase q-pa-md">
-                    {{ t('guild') }} {{ guildIndex + 1 }}
+                  <div class="q-pa-md text-center">
+                    <div class="text-bold text-uppercase">
+                      {{ t('guild') }} {{ guildIndex + 1 }}
+                    </div>
+                    <div class="q-pb-s">
+                      {{ t('xp') }}: {{ xpInGuild(guild.players) }}
+                    </div>
+                    <q-separator/>
                   </div>
 
                   <div class="q-px-md q-pb-sm">
-                    {{ t('xp') }}: {{ xpOnGuild(guild.players) }}
-                  </div>
+                    <div class="text-bold">
+                      {{ t('player_on_guild') }}:
+                    </div>
 
-                  <div class="q-px-md q-pb-sm">
-                    {{ t('player_on_guild') }}:
+                    <div
+                      v-for="(playerClass, classIndex) in PLAYER_CLASSES"
+                      :key="`class-${classIndex}`"
+                    >
+                      <q-chip
+                        :color="chipColorToClassInGuild(guild.players, playerClass)"
+                        text-color="white"
+                        :icon="PLAYER_CLASS_ICONS[playerClass]"
+                        class="full-width"
+                      >
+                        {{ t('player_classes.' + playerClass) }}:
+                        {{ classQuantityInGuild(guild.players, playerClass) }}
+                      </q-chip>
+                    </div>
+
+                    <div class="text-bold">
+                      {{ t('player_on_guild') }}:
+                    </div>
                   </div>
 
                   <q-separator/>
@@ -163,14 +187,14 @@
                       @drop="onDrop"
                       :data-box="!isShowMode"
                       :data-guild="guildIndex"
-                      class="overflow-hidden q-pa-s q-pb-xl full-height"
+                      class="overflow-hidden q-pa-s q-pb-lg full-height text-center"
                     >
                       <div
                         v-for="(guildPlayer, guildPlayerIndex) in (guild.players || [])"
                         :key="`available-${guildPlayerIndex}`"
                         :id="`player-${guildPlayer.id}`"
                         :draggable="!isShowMode"
-                        class="col-xs-12 col-sm-4 col-md-3 q-pa-sm"
+                        class="col-xs-12 col-sm-4 col-md-3 q-pa-sm text-left"
                         @dragstart="onDragStart"
                         :data-player="guildPlayer.id"
                       >
@@ -184,6 +208,7 @@
                           </q-item-section>
                         </q-item>
                       </div>
+                      {{ t('drag_and_drop_guild_info') }}
                     </div>
                   </q-card-section>
                 </q-card>
@@ -217,6 +242,7 @@ import { createSession, getSession, updateSession } from 'src/services/sessions/
 import { formatResponseError } from 'src/services/utils/error-formatter';
 import { getPlayers } from 'src/services/players/players-api';
 import { organizeGuilds } from 'src/services/guilds/guilds-api';
+import { PLAYER_CLASS_ICONS, PLAYER_CLASSES } from 'src/constants/player_classes';
 
 const router = useRouter();
 
@@ -300,16 +326,10 @@ async function fetchItem(id) {
 async function sortGuilds() {
   organizing.value = true;
   try {
-    const sortedGuilds = await organizeGuilds({
+    session.value.guilds = await organizeGuilds({
       players_per_guild: configuration.value.players_per_guild,
       players: configuration.value.selected_players.map((p) => p.id),
     });
-
-    session.value.guilds = sortedGuilds;
-
-    // exibir quando estiver faltando classe (fazer funções para somatorios e se tem classe),
-    // então colocar no servidor,
-
   } catch (e) {
     Notify.create({
       message: t('failed_to_organize'),
@@ -347,10 +367,18 @@ function filterSelectedPlayers() {
   });
 }
 
-function xpOnGuild(players) {
+function xpInGuild(players) {
   return (players || []).reduce((previousValue, currentPlayer) => {
     return previousValue + (currentPlayer.xp || 0);
   }, 0);
+}
+
+function chipColorToClassInGuild(players, playerClass) {
+  return (players || []).some((p) => p.class === playerClass) ? 'teal' : 'warning';
+}
+
+function classQuantityInGuild(players, playerClass) {
+  return (players || []).filter((p) => p.class === playerClass).length;
 }
 
 // store the id of the draggable element

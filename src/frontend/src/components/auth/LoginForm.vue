@@ -44,15 +44,15 @@
           :label="t('login')"
         />
 
-<!--        <div class="col-xs-12 q-mt-lg">-->
-<!--          <a-->
-<!--            class="text-primary cursor-pointer"-->
-<!--            style="text-decoration: underline"-->
-<!--            @click="emit('show-forgot-password')"-->
-<!--          >-->
-<!--            {{ t('forgot_password') }}-->
-<!--          </a>-->
-<!--        </div>-->
+        <div class="col-xs-12 q-mt-lg">
+          <a
+            class="text-primary cursor-pointer"
+            style="text-decoration: underline"
+            @click="emit('show-forgot-password')"
+          >
+            {{ t('forgot_password') }}
+          </a>
+        </div>
         <div class="col-xs-12 q-mt-sm">
           {{ t('do_not_have_an_account') }}
           <router-link :to="{ name: 'register' }" class="text-primary">

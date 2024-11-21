@@ -172,6 +172,8 @@ export default {
   dashboard_message: 'Bem-vindo à sua central de controle! Aqui, você pode dar vida à sua aventura, cadastrando jogadores, criando sessões épicas e organizando guildas de forma estratégica para garantir o equilíbrio. Monte seus times, distribua classes e XP como um verdadeiro Mestre do Jogo, e prepare-se para liderar as melhores guildas rumo à vitória.',
   login_message: 'Bem-vindo de volta, Mestre do Jogo! Entre agora para gerenciar jogadores, criar sessões e organizar guildas que farão história. Assuma o controle, balanceie as forças e prepare-se para liderar aventuras inesquecíveis. O jogo está em suas mãos!',
   login_title: 'Mestre das Guildas',
+  session_name: 'Nome da sessão',
+  drag_and_drop_guild_info: 'Arraste jogadores aqui para organizar manualmente!',
   player_classes: {
     warrior: 'Guerreiro',
     mage: 'Mago',

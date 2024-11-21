@@ -88,6 +88,8 @@ Após a execução do script `setup-homolog.sh` mais alguns passos podem se faze
 - Configuração do .env frontend para a URL da API
 - Restartar containers (Novo build do container frontend)
 
+### Deploy
+
 O script abaixo pode ser utilizado para realização do deploy no ambiente de homologação,
 passando as flags `--all`, `--backend` ou `--frontend` para realizar o deploy do respectivo ambiente:
 

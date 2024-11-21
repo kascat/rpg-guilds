@@ -20,7 +20,7 @@
 
 <script setup>
 import ResetPasswordForm from 'components/auth/ResetPasswordForm';
-
+import { t } from 'src/services/utils/i18n';
 </script>
 <style scoped>
 .login-page {
