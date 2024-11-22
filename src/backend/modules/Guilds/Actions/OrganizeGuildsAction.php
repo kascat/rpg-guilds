@@ -38,9 +38,9 @@ class OrganizeGuildsAction
         $suportPlayers = PlayerRepository::getPlayersSortedByXP($playerIds, [Player::PLAYER_CLASS => PlayerClassesEnum::CLERIC])->get();
         $defensivePlayers = PlayerRepository::getPlayersSortedByXP($playerIds, [Player::PLAYER_CLASS => PlayerClassesEnum::WARRIOR])->get();
 
-        $this->sortPlayersInGuilds($guilds, $attackingPlayers);
-        $this->sortPlayersInGuilds($guilds, $defensivePlayers);
         $this->sortPlayersInGuilds($guilds, $suportPlayers);
+        $this->sortPlayersInGuilds($guilds, $defensivePlayers);
+        $this->sortPlayersInGuilds($guilds, $attackingPlayers);
 
         return $guilds;
     }

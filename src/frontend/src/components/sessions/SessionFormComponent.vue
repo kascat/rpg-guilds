@@ -309,9 +309,8 @@ async function saveItem() {
 
     if (validated) {
       const dataToSave = { ...session.value };
-      dataToSave.guilds = session.value.guilds.map((g) => {
-        g.players = g.players.map((p) => p.id);
-        return g;
+      dataToSave.guilds = dataToSave.guilds.map((g) => {
+        return { players: g.players.map((p) => p.id) };
       });
 
       await createSession(dataToSave);

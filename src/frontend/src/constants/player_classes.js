@@ -4,10 +4,10 @@ const ARCHER = 'archer';
 const CLERIC = 'cleric';
 
 export const PLAYER_CLASSES = {
+  CLERIC,
   WARRIOR,
   MAGE,
   ARCHER,
-  CLERIC,
 };
 
 export const PLAYER_CLASS_ICONS = {
