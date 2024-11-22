@@ -2,6 +2,7 @@
 
 namespace Guilds\Actions;
 
+use Guilds\Enums\BalancingStrategyEnum;
 use Illuminate\Database\Eloquent\Collection;
 use Players\Enums\PlayerClassesEnum;
 use Players\Player;
@@ -9,16 +10,33 @@ use Players\PlayerRepository;
 
 class OrganizeGuildsAction
 {
-    public function handle(int $playersPerGuild, array $players): array
+    public function handle(int $playersPerGuild, array $playerIds, $strategy): array
     {
-        $allPlayersQuantity = PlayerRepository::getPlayersSortedByXP($players)->count();
+        $allPlayersQuantity = PlayerRepository::getPlayersSortedByXP($playerIds)->count();
         $guildsQuantity = (int) ceil($allPlayersQuantity / $playersPerGuild);
 
-        $attackingPlayers = PlayerRepository::getPlayersSortedByXP($players, [Player::PLAYER_CLASS => [PlayerClassesEnum::ARCHER, PlayerClassesEnum::MAGE]])->get();
-        $suportPlayers = PlayerRepository::getPlayersSortedByXP($players, [Player::PLAYER_CLASS => PlayerClassesEnum::CLERIC])->get();
-        $defensivePlayers = PlayerRepository::getPlayersSortedByXP($players, [Player::PLAYER_CLASS => PlayerClassesEnum::WARRIOR])->get();
-
         $guilds = array_fill(0, $guildsQuantity, ['xp' => 0, 'players' => []]);
+
+        return match ($strategy) {
+            BalancingStrategyEnum::XP->value => $this->balancingByXp($guilds, $playerIds),
+            BalancingStrategyEnum::PLAYER_CLASS->value => $this->balancingByClass($guilds, $playerIds),
+        };
+    }
+
+    private function balancingByXp(array $guilds, array $playerIds): array
+    {
+        $allPlayers = PlayerRepository::getPlayersSortedByXP($playerIds)->get();
+
+        $this->sortPlayersInGuilds($guilds, $allPlayers);
+
+        return $guilds;
+    }
+
+    private function balancingByClass(array $guilds, array $playerIds): array
+    {
+        $attackingPlayers = PlayerRepository::getPlayersSortedByXP($playerIds, [Player::PLAYER_CLASS => [PlayerClassesEnum::ARCHER, PlayerClassesEnum::MAGE]])->get();
+        $suportPlayers = PlayerRepository::getPlayersSortedByXP($playerIds, [Player::PLAYER_CLASS => PlayerClassesEnum::CLERIC])->get();
+        $defensivePlayers = PlayerRepository::getPlayersSortedByXP($playerIds, [Player::PLAYER_CLASS => PlayerClassesEnum::WARRIOR])->get();
 
         $this->sortPlayersInGuilds($guilds, $attackingPlayers);
         $this->sortPlayersInGuilds($guilds, $defensivePlayers);

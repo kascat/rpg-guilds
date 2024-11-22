@@ -89,10 +89,10 @@
 
         <div class="col-xs-12">
           <div class="row justify-between q-mb-md items-center">
-            <div class="q-mb-sm text-h6">
+            <div class="col-xs-12 q-mb-sm text-h6">
               {{ t('player_guilds') }}
             </div>
-            <div v-if="!isShowMode" class="row">
+            <div v-if="!isShowMode" class="col-xs-12 row q-col-gutter-md">
               <q-input
                 v-model="configuration.players_per_guild"
                 :label="t('players_per_guild') + ' *'"
@@ -102,18 +102,33 @@
                 type="number"
                 step="1"
                 min="1"
-                class="col-xs-12 col-sm"
+                class="col-xs-12 col-md-4"
               />
-              <q-btn
-                class="q-ml-md"
-                icon="star"
-                :label="t('organize')"
-                color="secondary"
-                outline
-                :disable="!configuration.players_per_guild || organizing"
-                :loading="organizing"
-                @click="sortGuilds()"
+              <q-select
+                v-model="configuration.strategy"
+                :label="t('strategy') + ' *'"
+                :options="strategyOptions"
+                option-label="label"
+                option-value="value"
+                map-options
+                emit-value
+                dense
+                outlined
+                hide-bottom-space
+                class="col-xs-12 col-md-4"
               />
+              <div class="col-xs-12 col-md-4 row items-center">
+                <q-btn
+                  class="q-ml-md full-width"
+                  icon="star"
+                  :label="t('organize')"
+                  color="secondary"
+                  outline
+                  :disable="!configuration.players_per_guild || !configuration.strategy || organizing"
+                  :loading="organizing"
+                  @click="sortGuilds()"
+                />
+              </div>
             </div>
           </div>
 
@@ -208,7 +223,7 @@
                           </q-item-section>
                         </q-item>
                       </div>
-                      {{ t('drag_and_drop_guild_info') }}
+                      {{ !isShowMode ? t('drag_and_drop_guild_info') : '' }}
                     </div>
                   </q-card-section>
                 </q-card>
@@ -243,6 +258,7 @@ import { formatResponseError } from 'src/services/utils/error-formatter';
 import { getPlayers } from 'src/services/players/players-api';
 import { organizeGuilds } from 'src/services/guilds/guilds-api';
 import { PLAYER_CLASS_ICONS, PLAYER_CLASSES } from 'src/constants/player_classes';
+import { BALANCE_STRATEGY } from 'src/constants/balance_strategy';
 
 const router = useRouter();
 
@@ -261,6 +277,7 @@ const configuration = ref({
   guilds: [],
   selected_players: [],
   players_per_guild: null,
+  strategy: null,
 });
 
 const playerOptions = ref([]);
@@ -268,6 +285,11 @@ const saving = ref(false);
 const itemFormRef = ref(null);
 const organizing = ref(false);
 const isShowMode = ref(false);
+
+const strategyOptions = Object.values(BALANCE_STRATEGY).map((value) => ({
+  label: t(`balance_strategy.${value}`),
+  value: value,
+}));
 
 onMounted(async () => {
   if (props.formItemId) {
@@ -327,6 +349,7 @@ async function sortGuilds() {
   organizing.value = true;
   try {
     session.value.guilds = await organizeGuilds({
+      strategy: configuration.value.strategy,
       players_per_guild: configuration.value.players_per_guild,
       players: configuration.value.selected_players.map((p) => p.id),
     });

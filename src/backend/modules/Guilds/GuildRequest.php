@@ -2,6 +2,7 @@
 
 namespace Guilds;
 
+use Guilds\Enums\BalancingStrategyEnum;
 use Illuminate\Validation\Rule;
 use Kascat\EasyModule\Core\Request;
 use Players\Player;
@@ -16,6 +17,7 @@ class GuildRequest extends Request
         return [
             'players_per_guild' => ['required', 'int'],
             'players' => ['required', 'array', Rule::exists(Player::TABLE, Player::ID)],
+            'strategy' => ['required', Rule::enum(BalancingStrategyEnum::class)],
         ];
     }
 

@@ -173,11 +173,16 @@ export default {
   login_message: 'Bem-vindo de volta, Mestre do Jogo! Entre agora para gerenciar jogadores, criar sessões e organizar guildas que farão história. Assuma o controle, balanceie as forças e prepare-se para liderar aventuras inesquecíveis. O jogo está em suas mãos!',
   login_title: 'Mestre das Guildas',
   session_name: 'Nome da sessão',
+  strategy: 'Estratégia',
   drag_and_drop_guild_info: 'Arraste jogadores aqui para organizar manualmente!',
   player_classes: {
     warrior: 'Guerreiro',
     mage: 'Mago',
     archer: 'Arqueiro',
     cleric: 'Clérigo',
+  },
+  balance_strategy: {
+    xp: 'Balanceamento de XP',
+    class: 'Balanceamento por agrupamento',
   },
 };

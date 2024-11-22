@@ -19,7 +19,11 @@ class GuildService extends Service
     public function organizeGuilds(array $data): array
     {
         try {
-            $organizedGuilds = $this->organizeGuildsAction->handle($data['players_per_guild'], $data['players']);
+            $organizedGuilds = $this->organizeGuildsAction->handle(
+                $data['players_per_guild'],
+                $data['players'],
+                $data['strategy']
+            );
 
             return self::buildReturn($organizedGuilds);
         } catch (Throwable $exception) {
