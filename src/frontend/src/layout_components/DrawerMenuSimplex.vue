@@ -3,13 +3,6 @@
     <q-item class="q-pa-none">
       <q-item-section class="rounded-borders bg-grey-3 q-ma-sm q-pa-md">
         <div class="row q-col-gutter-sm">
-          <div v-if="loggedUser.store_id" class="text-subtitl text-bold text-center text-blue-grey-10 col-12">
-            {{ loggedUser.store.business_name || loggedUser.store.corporate_name }}
-            <div v-if="loggedUser.sales_point_id" class="text-weight-thin">
-              {{ loggedUser.sales_point.name }}
-            </div>
-            <q-separator class="q-mt-sm"/>
-          </div>
           <div class="text-blue-grey-10 col-12 text-center">
             {{ loggedUser.name }}
           </div>

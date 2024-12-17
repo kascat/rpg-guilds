@@ -2,8 +2,7 @@ import { getLoggedUser } from 'src/services/user/user-api';
 
 let loggedUser = {
   id: null,
-  store_id: null,
-  sales_point_id: null,
+  permission_id: null,
   name: null,
   email: null,
   role: null,
@@ -14,22 +13,6 @@ let loggedUser = {
     id: null,
     name: null,
     abilities: null,
-  },
-  sales_point: {
-    id: null,
-    name: null,
-  },
-  store: {
-    id: null,
-    corporate_name: null,
-    business_name: null,
-    store_plan: {
-      id: null,
-      plan: null,
-      plan_label: null,
-      expires_in: null,
-      block_access_in: null,
-    },
   },
 };
 
